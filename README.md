@@ -1,6 +1,6 @@
 # Cloudwatch - Utils
 
-This is a collection of useful scripts for managing & interating with AWS CloudWatch Logs
+This is a collection of useful scripts for managing & interacting with AWS CloudWatch Logs
 
 ## Get Started
 
