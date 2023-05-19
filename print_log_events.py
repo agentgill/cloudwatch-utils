@@ -7,8 +7,8 @@ Usage: print_log_events.py <LOG_GROUP_NAME> [--start=<START>] [--end=<END>]
 
 Options:
   <LOG_GROUP_NAME>    Name of the CloudWatch log group.
-  --start=<START>     Only print events with a timestamp after this time.
-  --end=<END>         Only print events with a timestamp before this time.
+  --start=<START>     Only print events with a timestamp after this time. (defaults today)
+  --end=<END>         Only print events with a timestamp before this time. (defaults today)
   -h --help           Show this screen.
 
 """
@@ -16,6 +16,7 @@ Options:
 import boto3
 import docopt
 import maya
+from datetime import datetime, timedelta
 
 
 def get_log_events(log_group, start_time=None, end_time=None):
@@ -54,6 +55,13 @@ def milliseconds_since_epoch(time_string):
     return seconds * 1000
 
 
+def today_start_end():
+    now = datetime.now()
+    start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    end = start + timedelta(days=1, microseconds=-1)
+    return (start.isoformat(), end.isoformat())
+
+
 if __name__ == "__main__":
     args = docopt.docopt(__doc__)
 
@@ -65,7 +73,8 @@ if __name__ == "__main__":
         except ValueError:
             exit(f'Invalid datetime input as --start: {args["--start"]}')
     else:
-        start_time = None
+        start_time, _ = today_start_end()
+        start_time = milliseconds_since_epoch(start_time)
 
     if args["--end"]:
         try:
@@ -73,7 +82,8 @@ if __name__ == "__main__":
         except ValueError:
             exit(f'Invalid datetime input as --end: {args["--end"]}')
     else:
-        end_time = None
+        _, end_time = today_start_end()
+        end_time = milliseconds_since_epoch(end_time)
 
     print(f"start_time: {start_time}")
     print(f"end_time: {start_time}")
