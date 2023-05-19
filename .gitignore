@@ -1,4 +1,6 @@
-.venv
 .sfdx
 *.log
 .vscode
+.venv/
+temp/
+logs/
