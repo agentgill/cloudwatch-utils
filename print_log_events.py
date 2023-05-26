@@ -85,9 +85,17 @@ if __name__ == "__main__":
         _, end_time = today_start_end()
         end_time = milliseconds_since_epoch(end_time)
 
-    print(f"start_time: {start_time}")
-    print(f"end_time: {start_time}")
+    with open("cloudwatch.log", "w") as f:
+        f.write(f"start_time: {start_time}\n")
+        f.write(f"end_time: {end_time}\n")
 
-    logs = get_log_events(log_group=log_group, start_time=start_time, end_time=end_time)
-    for event in logs:
-        print(event["message"].rstrip())
+        print(f"start_time: {start_time}")
+        print(f"end_time: {start_time}")
+
+        logs = get_log_events(
+            log_group=log_group, start_time=start_time, end_time=end_time
+        )
+        for event in logs:
+            message = event["message"].rstrip()
+            print(event["message"].rstrip())
+            f.write(message + "\n")
