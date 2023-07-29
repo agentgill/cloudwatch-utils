@@ -1,20 +1,8 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8
-"""Print log event messages from a CloudWatch log group.
-
-Usage: print_log_events.py <LOG_GROUP_NAME> [--start=<START>] [--end=<END>]
-       print_log_events.py -h --help
-
-Options:
-  <LOG_GROUP_NAME>    Name of the CloudWatch log group.
-  --start=<START>     Only print events with a timestamp after this time. (defaults today)
-  --end=<END>         Only print events with a timestamp before this time. (defaults today)
-  -h --help           Show this screen.
-
-"""
 
 import boto3
-import docopt
+import argparse
 import maya
 from datetime import datetime, timedelta
 
@@ -63,31 +51,48 @@ def today_start_end():
 
 
 if __name__ == "__main__":
-    args = docopt.docopt(__doc__)
+    parser = argparse.ArgumentParser(
+        description="Print log event messages from a CloudWatch log group."
+    )
+    parser.add_argument("log_group", type=str, help="Name of the CloudWatch log group.")
+    parser.add_argument(
+        "--start",
+        type=str,
+        default=None,
+        help="Only print events with a timestamp after this time. (defaults to the start of today)",
+    )
+    parser.add_argument(
+        "--end",
+        type=str,
+        default=None,
+        help="Only print events with a timestamp before this time. (defaults to the end of today)",
+    )
 
-    log_group = args["<LOG_GROUP_NAME>"]
+    args = parser.parse_args()
 
-    if args["--start"]:
+    log_group = args.log_group
+
+    if args.start:
         try:
-            start_time = milliseconds_since_epoch(args["--start"])
+            start_time = milliseconds_since_epoch(args.start)
         except ValueError:
-            exit(f'Invalid datetime input as --start: {args["--start"]}')
+            exit(f"Invalid datetime input as --start: {args.start}")
     else:
         start_time, _ = today_start_end()
         start_time = milliseconds_since_epoch(start_time)
 
-    if args["--end"]:
+    if args.end:
         try:
-            end_time = milliseconds_since_epoch(args["--end"])
+            end_time = milliseconds_since_epoch(args.end)
         except ValueError:
-            exit(f'Invalid datetime input as --end: {args["--end"]}')
+            exit(f"Invalid datetime input as --end: {args.end}")
     else:
         _, end_time = today_start_end()
         end_time = milliseconds_since_epoch(end_time)
 
     with open("cloudwatch.log", "w") as f:
-        f.write(f"start_time: {start_time}\n")
-        f.write(f"end_time: {end_time}\n")
+        f.write(f"start_time: {start_time}\\n")
+        f.write(f"end_time: {end_time}\\n")
 
         print(f"start_time: {start_time}")
         print(f"end_time: {start_time}")
@@ -95,6 +100,7 @@ if __name__ == "__main__":
         logs = get_log_events(
             log_group=log_group, start_time=start_time, end_time=end_time
         )
+
         for event in logs:
             message = event["message"].rstrip()
             print(event["message"].rstrip())

@@ -1,6 +1,6 @@
-# Cloudwatch - Utils
+# AWS CloudWatch - Utils
 
-This is a collection of useful scripts for managing & interacting with AWS CloudWatch Logs
+This is a collection of useful scripts for managing & interacting with AWS CloudWatch Logs & Metrics
 
 ## Get Started
 
@@ -25,34 +25,57 @@ step to activate your virtualenv.
 source .venv/bin/activate
 ```
 
-## Print Log Events
+## Get CloudWatch Log Events
 
 Useful Python Script for outputing Cloudwatch Logs
 
 ```bash
-Usage: print_log_events.py <LOG_GROUP_NAME> [--start=<START>] [--end=<END>]
-       print_log_events.py -h --help
+usage: get-logs.py [-h] [--start START] [--end END] log_group
 
-Options:
-  <LOG_GROUP_NAME>    Name of the CloudWatch log group.
-  --start=<START>     Only print events with a timestamp after this time.
-  --end=<END>         Only print events with a timestamp before this time.
-  -h --help           Show this screen.
+Print log event messages from a CloudWatch log group.
+
+positional arguments:
+  log_group      Name of the CloudWatch log group.
+
+options:
+  -h, --help     show this help message and exit
+  --start START  Only print events with a timestamp after this time. (defaults to the start of today)
+  --end END      Only print events with a timestamp before this time. (defaults to the end of today)
 ```
 
 Output logs to terminal
 
 ```bash
-python print_log_events.py '/aws/lambda/mylambda' --start="25 Janurary at 00:00 am" --end="25 January 2023 at 23:50 pm"
+python get_logs.py '/aws/lambda/mylambda' --start="25 Janurary at 00:00 am" --end="25 January 2023 at 23:50 pm"
+```
+
+```bash
+python get_logs.py '/aws/lambda/mylambda' --start=Yesterday --end=Now
 ```
 
 Output logs to local file
 
 ```bash
-python print_log_events.py '/aws/lambda/mylambda' --start="25 January at 00:00 am" --end="25 January 2023 at 23:59 pm" > cloudwatch.log
+python get_logs.py '/aws/lambda/mylambda' --start="25 January at 00:00 am" --end="25 January 2023 at 23:59 pm" > cloudwatch.log
 ```
 
 Credits to Alex
 
 - [Alex Chan](https://github.com/alexwlchan)
 - [Fetching CloudWatch Logs](https://alexwlchan.net/2017/fetching-cloudwatch-logs/)
+
+## Get CloudWatch Metrics
+
+Useful Python Script for outputing Cloudwatch Mertics. Example easily identify errors counts by functions.
+
+```bash
+usage: get-metrics.py [-h] [--profile [P]] [--hours [H]] [--metric [M]]
+
+Process AWS profile and time period.
+
+options:
+  -h, --help     show this help message and exit
+  --profile [P]  The AWS profile to use
+  --hours [H]    The start time in hours
+  --metric [M]   The metric name to fetch (Errors, Invocations, Duration, Throttles, ConcurrentExecutions, etc
+```
