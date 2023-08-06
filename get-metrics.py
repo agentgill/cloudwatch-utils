@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import boto3
 from datetime import datetime, timedelta
