@@ -85,12 +85,12 @@ options:
 Useful Python Script for outputing Daily Cost Usage Metrics
 
 ```bash
-usage: get-cost-usage.py [-h] [--profile PROFILE] metrics [metrics ...]
+usage: get-cost-usage.py [-h] [--profile PROFILE] [metrics ...]
 
-Get AWS cost and usage data for today
+Get AWS cost and usage data for today.
 
 positional arguments:
-  metrics            Metrics to retrieve
+  metrics            Metrics to retrieve (UnblendedCost, BlendedCost, UsageQuantity, etc))
 
 options:
   -h, --help         show this help message and exit
