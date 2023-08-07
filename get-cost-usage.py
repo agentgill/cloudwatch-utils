@@ -41,6 +41,11 @@ if __name__ == "__main__":
         description="Get AWS cost and usage data for today."
     )
     parser.add_argument("--profile", type=str, help="AWS profile to use")
-    parser.add_argument("metrics", nargs="+", help="Metrics to retrieve")
+    parser.add_argument(
+        "metrics",
+        nargs="*",
+        default=["UnblendedCost"],
+        help="Metrics to retrieve (UnblendedCost, BlendedCost, UsageQuantity, etc))",
+    )
     args = parser.parse_args()
     main(args.profile, args.metrics)
