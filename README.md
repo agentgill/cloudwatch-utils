@@ -79,3 +79,20 @@ options:
   --hours [H]    The start time in hours
   --metric [M]   The metric name to fetch (Errors, Invocations, Duration, Throttles, ConcurrentExecutions, etc
 ```
+
+## Get Cost Usage Metrics
+
+Useful Python Script for outputing Daily Cost Usage Metrics
+
+```bash
+usage: get-cost-usage.py [-h] [--profile PROFILE] metrics [metrics ...]
+
+Get AWS cost and usage data for today
+
+positional arguments:
+  metrics            Metrics to retrieve
+
+options:
+  -h, --help         show this help message and exit
+  --profile PROFILE  AWS profile to use
+```
