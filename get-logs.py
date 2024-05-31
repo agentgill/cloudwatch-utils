@@ -103,7 +103,13 @@ if __name__ == "__main__":
     print(f"log_group: {log_group}")
     print(f"log_filename: {log_filename}")
 
-    with open(log_filename, "w") as f:
+    log_dir = "logs"
+    os.makedirs(log_dir, exist_ok=True)
+
+    log_filename = create_log_filename(log_group, start_time, end_time)
+    log_filepath = os.path.join(log_dir, log_filename)
+
+    with open(log_filepath, "w") as f:
         f.write(f"start_time: {start_time}\n")
         f.write(f"end_time: {end_time}\n")
 
