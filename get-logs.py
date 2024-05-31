@@ -5,6 +5,7 @@ import boto3
 import argparse
 import maya
 from datetime import datetime, timedelta
+import os
 
 
 def get_log_events(log_group, start_time=None, end_time=None):
@@ -50,6 +51,13 @@ def today_start_end():
     return (start.isoformat(), end.isoformat())
 
 
+def create_log_filename(log_group, start_time, end_time):
+    log_name = os.path.basename(log_group)
+    start_time_str = datetime.fromtimestamp(start_time / 1000).strftime("%Y%m%d%H%M%S")
+    end_time_str = datetime.fromtimestamp(end_time / 1000).strftime("%Y%m%d%H%M%S")
+    return f"{log_name}_{start_time_str}_{end_time_str}.log"
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Print log event messages from a CloudWatch log group."
@@ -90,12 +98,17 @@ if __name__ == "__main__":
         _, end_time = today_start_end()
         end_time = milliseconds_since_epoch(end_time)
 
-    with open("cloudwatch.log", "w") as f:
-        f.write(f"start_time: {start_time}\\n")
-        f.write(f"end_time: {end_time}\\n")
+    log_filename = create_log_filename(log_group, start_time, end_time)
+
+    print(f"log_group: {log_group}")
+    print(f"log_filename: {log_filename}")
+
+    with open(log_filename, "w") as f:
+        f.write(f"start_time: {start_time}\n")
+        f.write(f"end_time: {end_time}\n")
 
         print(f"start_time: {start_time}")
-        print(f"end_time: {start_time}")
+        print(f"end_time: {end_time}")
 
         logs = get_log_events(
             log_group=log_group, start_time=start_time, end_time=end_time
@@ -103,5 +116,5 @@ if __name__ == "__main__":
 
         for event in logs:
             message = event["message"].rstrip()
-            print(event["message"].rstrip())
+            print(message)
             f.write(message + "\n")
