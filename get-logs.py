@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import os
 
 
-def get_log_events(log_group, start_time=None, end_time=None):
+def get_log_events(log_group, region="us-east-2", start_time=None, end_time=None):
     """Generate all the log events from a CloudWatch group.
 
     :param log_group: Name of the CloudWatch log group.
@@ -18,7 +18,7 @@ def get_log_events(log_group, start_time=None, end_time=None):
         Expressed as the number of milliseconds after midnight Jan 1 1970.
 
     """
-    client = boto3.client("logs")
+    client = boto3.client("logs", region_name=region)
     kwargs = {
         "logGroupName": log_group,
         "limit": 10000,
@@ -74,6 +74,13 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="Only print events with a timestamp before this time. (defaults to the end of today)",
+    )
+
+    parser.add_argument(
+        "--region",
+        type=str,
+        default="us-east-2",
+        help="AWS region. (defaults to us-east-1)",
     )
 
     args = parser.parse_args()
